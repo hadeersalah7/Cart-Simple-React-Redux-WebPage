@@ -16,7 +16,12 @@ export const fetchCartData = () => {
 
     try {
       const fetchedCart = await fetchData();
-      dispatch(cartActions.replaceCart(fetchedCart));
+      dispatch(
+        cartActions.replaceCart({
+          items: fetchedCart.items || [],
+          totalQuantity: fetchedCart.totalQuantity,
+        }),
+      );
     } catch (error) {
       dispatch(
         uiActions.showNotification({
@@ -44,7 +49,10 @@ export const sendCartData = (cart) => {
         "https://redux-cart-80000-default-rtdb.firebaseio.com/cart.json",
         {
           method: "PUT",
-          body: JSON.stringify(cart),
+          body: JSON.stringify({
+            items: cart.items,
+            totalQuantity: cart.totalQuantity,
+          }),
         },
       );
       if (!response.ok) {
